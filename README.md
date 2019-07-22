@@ -28,7 +28,9 @@ This code has been running in production and has been running well for us. Few i
 
 # Preparing your server
 The remainder of this document will walk you through how to deploy and configure your Postal server.
+
 ## Choose your Cloud Provider
+You can self-host this, or go with a cloud provider. Cloud providers will probably be the fastest, so we'll take how to do this on your own VPS in the cloud.
 
 ### System requirements
 * At least 2GB of RAM (for the smallest Postal instances)
