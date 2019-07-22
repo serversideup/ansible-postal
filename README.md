@@ -44,7 +44,8 @@ You can self-host this, or go with a cloud provider. Cloud providers will probab
 
 DISCLAIMER: The above links are affiliate links. This kicks back a few bucks to us for the referral, but does not cost you *anything* extra to you. Affiliate programs do not influence our recommendations in any sort of way either. These are the best recommendations available.
 
-**🚨Important note:** Since we do use Click & Open tracking, we found [Vultr](https://www.vultr.com/?ref=7093917) to have the easiest support for a second Internet IP address. We have had issues with Digital Ocean's "floating IP address" before, so that's why we went with Vultr. The rest of this guide will show you how to deploy through [Vultr](https://www.vultr.com/?ref=7093917).
+#### 🚨 Important note regarding Digital Ocean's "Floating IP Addresses"
+Since we use Click & Open tracking, we found [Vultr](https://www.vultr.com/?ref=7093917) to have the easiest support for a second Internet IP address. Digital Ocean uses "Floating IP Addresses" for their secondary IP addresses. This uses some form of NAT (they use Openstack) for floating IPs and can break certain things on some software. We experienced these issues with Digital Ocean's "floating IP address" in the past, so that's why we went with Vultr. The rest of this guide will show you how to deploy through [Vultr](https://www.vultr.com/?ref=7093917).
 
 ## Configure your SSH keys
 For best security, make sure your SSH keys are configured and [added to your Vultr account](https://www.vultr.com/docs/how-do-i-generate-ssh-keys).
