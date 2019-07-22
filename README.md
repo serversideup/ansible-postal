@@ -148,8 +148,8 @@ Modify this file to your satisfaction. Follow the comments in the file of what n
 ### "host_vars/mypostalserver.mydomain.test"
 Rename this file to match exactly what you have it set to in the "hosts" file within the Ansible repo. Open this file and modify it according to the comments.
 
-## Run the Ansible playbook
-Once you have everything configured, we can finally get to running the "Ansible Playbook". Run this command to start the deployment:
+## Run the Ansible playbook (from your machine -- not the server)
+Once you have everything configured, we can finally get to running the "Ansible Playbook". Run this command to start the deployment **on your own machine**:
 
 ```sh
 ansible-playbook -i /path/to/your/downloaded-repo/hosts /path/to/your/downloaded-repo/postal.yml
