@@ -14,7 +14,7 @@ This entire setup supports the following features and **deploys everything for y
 * 🚀 Automatic installation & configuration of [Postal](https://postal.atech.media/)
 * 😱 Automatic configuration of HTTPS & TLS for secure emails & web GUI Access (via Let's Encrypt)
 * 🔐 Secure server management with hardened SSH (passwordless, disabled root login, and custom SSH ports)
-* ⏫ Automatic server security updates (Postal updates are still manual though...)
+* ⏫ Automatic server security updates ([Postal updates are still manual though, but very easy...](https://github.com/atech/postal/wiki/Upgrading))
 
 
 ### What is Ansible?
