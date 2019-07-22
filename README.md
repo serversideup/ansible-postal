@@ -3,7 +3,7 @@
 </p>
 <p align="center">
     <a href="https://raw.githubusercontent.com/521dimensions/ansible-postal/master/LICENSE" target="_blank"><img src="https://badgen.net/github/license/521dimensions/ansible-postal" alt="License"></a>
-    <a href="https://www.paypal.me/521dimensions/20usd"><img src="https://badgen.net/badge/icon/Donate?label=Say%20Thanks&color=orange" alt="Support us"></a>
+    <a href="https://www.paypal.me/521dimensions/20usd"><img src="https://badgen.net/badge/icon/Buy%20Us%20Lunch?label=Say%20Thanks&color=orange" alt="Support us"></a>
     <p align="left">Deploy a fully functional and secure <a href="https://postal.atech.media/">Postal server</a> in minutes. If you found this valuable, <a href="https://www.paypal.me/521dimensions/20usd">please donate</a> so we can continue to bring the world open source resources.</p>
 </p>
 
@@ -146,3 +146,71 @@ Modify this file to your satisfaction. Follow the comments in the file of what n
 
 ### "host_vars/mypostalserver.mydomain.test"
 Rename this file to match exactly what you have it set to in the "hosts" file within the Ansible repo. Open this file and modify it according to the comments.
+
+## Run the Ansible playbook
+Once you have everything configured, we can finally get to running the "Ansible Playbook". Run this command to start the deployment:
+
+```sh
+ansible-playbook -i /path/to/your/downloaded-repo/hosts /path/to/your/downloaded-repo/postal.yml
+```
+
+☕️ Grab a cup of coffee while this runs, it should take a little less than 6 minutes to complete run.
+
+## Validate your server deployed correctly
+After your server is finished deploying, validate the following functions:
+
+### Web GUI should load and have a valid SSL certificate
+Visit https://mypostalserver.mydomain.test and see if your page loads. Make sure the SSL is valid.
+
+<img src="./.github/assets/06-ValidSSL.png" alt="Valid SSL">
+
+### SMTP port should support TLS
+Run the following command. Replace `mypostalserver.mydomain.test` with the DNS name that you chose.
+```sh
+openssl s_client -connect mypostalserver.mydomain.test:25 -starttls smtp
+```
+
+You should see a response like the one below showing us that it is working.
+
+<img src="./.github/assets/07-TLS.png" alt="TLS Validation">
+
+## Make your "postal web GUI user"
+To make a user so that you can log into the Web GUI, run the following command while connected to your server via SSH:
+
+```sh
+postal make-user
+```
+
+You will be prompted to fill out a few details your new user.
+
+## Configure click tracking
+Configure your DNS to add an "A Record" that points your tracking domain to the secondary IP address of your server.
+
+Once you are able to ping and verify that your DNS is resolving to the correct IP, you then need to register your email with Let's Encrypt to get a valid SSL certificate deployed for your click tracking.
+
+Run this command on the server:
+```sh
+postal register-lets-encrypt youremail@mydomain.test
+```
+
+## Enjoy 😃
+You've now successfully deployed your Postal server! From here on out, you can find [how to use Postal on the official documentation](https://github.com/atech/postal/wiki).
+
+The official documentation will be the best resource on how to do everything, but the steps we suggest doing from here are:
+1. Create your organization
+1. Create your web server
+1. Add the domains that you plan to send from
+1. Follow the validation settings and configure all DNS records for each domain you add
+1. Validate your settings by sending an email to https://mail-tester.com
+
+## If you need to make any adjustments
+If for some reason you need to make any special adjustments, see these files within the repoistory:
+
+1. `host_vars/mypostalserver.mydomain.test` (all variables you can change)
+1. `roles/postal/templates/opt/postal/config/postal.yml.j2` (the actual template that gets deployed)
+
+## Asking for help
+* If you want community support (responses are from volunteers at soonest-availability basis), [open an issue on Github &rarr;](https://github.com/521dimensions/ansible-postal/issues/new)
+* If you want professional support (guaranteed responses within one business day), you can [contact 521 Dimensions](https://521dimensions.com/contact-us) and we'll get in touch for billing details
+
+As always, if it is a Postal specific question, you can [browse the issues on Postal's Github](https://github.com/atech/postal/issues).
