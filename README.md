@@ -10,16 +10,15 @@
 # Overview
 This is an example of an Ansible repository that will automatically deploy Postal SMTP server and secure it for you. It does require a little background in server administration and how Ansible works.
 
-This entire setup supports the following features and **deploys everything for you in less than 6 minutes (even on slower servers)**:
+This entire setup supports the following features:
 * 🚀 Automatic installation & configuration of [Postal](https://postal.atech.media/)
+* ⚡️ Deploy a brand new server in **under 6 minutes** (even on a slower server)
 * 😱 Automatic configuration of HTTPS & TLS for secure emails & web GUI Access (via Let's Encrypt)
 * 🔐 Secure server management with hardened SSH (passwordless, disabled root login, and custom SSH ports)
 * ⏫ Automatic server security updates ([Postal updates are still manual though, but very easy...](https://github.com/atech/postal/wiki/Upgrading))
 
-
 ### What is Ansible?
 Ansible is a tool that you install on your computer that will connect to your server over SSH and configure it for you. If you are not familiar with Ansible, we highly suggest that you read [Ansible's Getting Started Guide](https://docs.ansible.com/ansible/latest/user_guide/intro_getting_started.html). This will help you understand the most important concepts and how to install it on your local machine.
-
 
 # 🚨 Special Notes
 This code has been running in production and has been running well for us. Few important notes for you to understand:
