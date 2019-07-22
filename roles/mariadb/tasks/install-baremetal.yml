@@ -1,0 +1,13 @@
+---
+- name: Install MariaDB server.
+  apt:
+    state: latest
+    name:
+      - mariadb-server-10.4
+    update_cache: yes
+
+- name: Ensure the custom MariaDB config is in place.
+  template:
+    src: etc/mysql/mariadb.conf.d/postal.cnf.j2
+    dest: /etc/mysql/mariadb.conf.d/postal.cnf
+  notify: restart mysql

@@ -1,0 +1,18 @@
+- name: Load secret key into variable.
+  shell: "cat {{ postal_secret_key_file }}"
+  register: postal_secret_key
+
+- name: Ensure the Postal configuration is up to date.
+  template:
+    src: opt/postal/config/postal.yml.j2
+    dest: /opt/postal/config/postal.yml
+  notify: restart postal
+
+- name: Allow Postal ports
+  ufw:
+    rule: allow
+    port: "{{ item }}"
+  with_items:
+    - '80'
+    - '443'
+    - '25'

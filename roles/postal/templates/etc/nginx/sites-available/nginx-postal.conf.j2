@@ -1,0 +1,43 @@
+server {
+    listen [::]:80;
+    listen {{postal_primary_ip_for_web_management}}:80;
+    server_name {{postal_web_host}};
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen [::]:443 ssl;
+    listen {{postal_primary_ip_for_web_management}}:443 ssl;
+    root /opt/postal/app/public;
+    server_name {{postal_web_host}};
+    ssl_certificate      /opt/postal/certificates/{{ postal_web_host }}/fullchain.pem;
+    ssl_certificate_key  /opt/postal/certificates/{{ postal_web_host }}/privkey.pem;
+
+    # Generate using: openssl dhparam 4096 -out /etc/ssl/dhparam.pem
+    # ssl_dhparam /etc/ssl/dhparam.pem;
+
+    ssl_protocols TLSv1.2;
+    ssl_prefer_server_ciphers on;
+    ssl_ciphers EECDH+ECDSA+AESGCM:EECDH+aRSA+AESGCM:EECDH+ECDSA+SHA512:EECDH+ECDSA+SHA384:EECDH+ECDSA+SHA256:ECDH+AESGCM:ECDH+AES256:DH+AESGCM:DH+AES256:RSA+AESGCM:!aNULL:!eNULL:!LOW:!RC4:!3DES:!MD5:!EXP:!PSK:!SRP:!DSS;
+
+    location / {
+       client_max_body_size 50M;
+       try_files $uri $uri/index.html $uri.html @puma;
+    }
+
+    location ^~ /.well-known/acme-challenge/ {
+        alias /opt/postal/certbot-webroot/.well-known/acme-challenge/;
+    }
+
+    location /assets {
+       add_header Cache-Control max-age=3600;
+    }
+
+    location @puma {
+        proxy_set_header X-Real-IP  $remote_addr;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto https;
+        proxy_pass http://127.0.0.1:5000;
+    }
+}

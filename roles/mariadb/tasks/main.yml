@@ -1,0 +1,6 @@
+---
+- include_tasks: prep-host.yml
+
+- include_tasks: install-baremetal.yml
+
+- include_tasks: permissions.yml

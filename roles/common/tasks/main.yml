@@ -1,0 +1,61 @@
+---
+- name: hostname | Configure hostname
+  hostname:
+    name: "{{ inventory_hostname }}"
+
+- name: hostname | Add hostname hosts to /etc/hosts
+  lineinfile:
+    dest: /etc/hosts
+    regexp: '^127\.0\.0\.1'
+    line: '127.0.0.1 {{ inventory_hostname }}'
+
+- name: Disable USERGROUPS_ENABLE for Umask 022
+  lineinfile:
+    dest: /etc/login.defs
+    regexp: ^USERGROUPS_ENAB
+    line: "#USERGROUPS_ENAB yes"
+    state: present
+    backrefs: yes
+
+- name: Update the apt cache
+  apt:
+    update_cache: yes
+    cache_valid_time: "{{ apt_cache_expiration }}"
+
+- name: Install latest of common packages
+  apt:
+    state: latest
+    name:
+      - build-essential
+      - curl
+      - git
+      - htop
+      - logrotate
+      - mailutils
+      - python-minimal
+      - software-properties-common
+      - ufw
+      - unattended-upgrades
+      - unzip
+      - wget
+      - zip
+
+- name: Set server to autoinstall security updates
+  template:
+    src: etc/apt/apt.conf.d/10periodic
+    dest: /etc/apt/apt.conf.d/10periodic
+
+- name: time | Configure correct Timezeone
+  timezone:
+    name: "{{ server_timezone }}"
+
+- name: time | Setup timesync config
+  template:
+    src: etc/systemd/timesyncd.conf
+    dest: /etc/systemd/timesyncd.conf
+  notify: enable Timedatectl
+  when: ansible_service_mgr == "systemd"
+
+- include_tasks: postfix.yml
+
+- include_tasks: users.yml

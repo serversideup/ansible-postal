@@ -1,0 +1,72 @@
+web:
+  # The host that the management interface will be available on
+  host: "{{ postal_web_host }}"
+  # The protocol that requests to the management interface should happen on
+  protocol: https
+
+fast_server:
+  # This can be enabled to enable click & open tracking on emails. It is disabled by
+  # default as it requires a separate static IP address on your server.
+  enabled: true
+  bind_address: "{{postal_secondary_ip_for_tracking_urls}}"
+  port: 80
+  port_ssl: 443
+
+general:
+  # This can be changed to allow messages to be sent from multiple IP addresses
+  use_ip_pools: false
+
+main_db:
+  # Specify the connection details for your MySQL database
+  host: "{{ postal_main_db_host }}"
+  username: "{{ postal_main_db_username }}"
+  password: "{{ postal_main_db_password }}"
+  database: "{{ postal_main_db_name }}"
+
+message_db:
+  # Specify the connection details for your MySQL server that will be house the
+  # message databases for mail servers.
+  host: "{{ postal_main_db_host }}"
+  username: "{{ postal_main_db_username }}"
+  password: "{{ postal_main_db_password }}"
+  prefix: postal
+
+rabbitmq:
+  # Specify the connection details for your RabbitMQ server.
+  host: "{{ postal_rabbitmq_host }}"
+  username: "{{ postal_rabbitmq_user }}"
+  password: "{{ postal_rabbitmq_password }}"
+  vhost: "/{{ postal_rabbitmq_vhost }}"
+
+smtp_server:
+  tls_enabled: true
+  tls_certificate_path: "/opt/postal/certificates/{{ postal_web_host }}/fullchain.pem"
+  tls_private_key_path: "/opt/postal/certificates/{{ postal_web_host }}/privkey.pem"
+
+dns:
+  # Specifies the DNS record that you have configured. Refer to the documentation at
+  # https://github.com/atech/postal/wiki/Domains-&-DNS-Configuration for further
+  # information about these.
+  mx_records:
+    - "{{ postal_dns_mx }}"
+  smtp_server_hostname: "{{ postal_dns_smtp_server_hostname }}"
+  spf_include: "{{ postal_dns_spf_include }}"
+  return_path: "{{ postal_dns_return_path }}"
+  route_domain: "{{ postal_dns_route_domain }}"
+  track_domain: "{{ postal_dns_track_domain }}"
+
+smtp:
+  # Specify an SMTP server that can be used to send messages from the Postal management
+  # system to users. You can configure this to use a Postal mail server once the
+  # your installation has been set up.
+  host: "{{ postal_smtp_host }}"
+  port: "{{ postal_smtp_port }}"
+  username: "{{ postal_smtp_username }}"
+  password: "{{ postal_smtp_password }}"
+  from_name: "Postal System - {{ inventory_hostname }}"
+  from_address: "{{ server_contact }}"
+
+rails:
+  # This is generated automatically by the config initialization. It should be a random
+  # string unique to your installation.
+  secret_key: "{{postal_secret_key.stdout}}"

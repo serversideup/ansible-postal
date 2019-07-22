@@ -1,0 +1,20 @@
+---
+  # Handlers for main.yml in the "common" role
+
+- name: enable Timedatectl
+  command: timedatectl set-ntp true
+
+- name: restart fail2ban
+  service:
+    name: fail2ban
+    state: restarted
+
+- name: restart ssh
+  service:
+    name: ssh
+    state: restarted
+
+- name: restart postfix
+  service:
+    name: postfix
+    state: restarted

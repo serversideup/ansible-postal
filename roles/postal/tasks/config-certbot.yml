@@ -1,0 +1,42 @@
+- name: Check to see if Let's Encrypt certificates are present.
+  stat:
+    path: /opt/postal/certificates/{{ postal_web_host }}/privkey.pem
+  register: letsencrypt_cert
+
+- name: Ensure the "acme.sh" directory exists
+  file:
+    path: /opt/postal/acme.sh/
+    owner: postal
+    group: www-data
+    state: directory
+
+- name: Check out latest "acme.sh" repo
+  git:
+    repo: https://github.com/Neilpang/acme.sh.git
+    dest: /opt/postal/acme.sh/
+  become_user: postal
+
+- name: Ensure certificates folder is created.
+  file:
+    path: "/opt/postal/certificates/{{ postal_web_host }}"
+    owner: postal
+    group: www-data
+    state: directory
+
+- name: Ensure certbot webroot is created.
+  file:
+    path: /opt/postal/certbot-webroot/.well-known/acme-challenge/
+    state: directory
+    owner: postal
+    group: www-data
+    mode: 0770
+
+- name: Ensure postal user can reload NGINX.
+  lineinfile:
+    dest: /etc/sudoers
+    state: present
+    line: 'postal ALL= NOPASSWD: /bin/systemctl reload nginx.service'
+
+- include_tasks: initialize-certbot.yml
+  when: letsencrypt_cert.stat.exists == false
+

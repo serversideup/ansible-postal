@@ -1,0 +1,30 @@
+---
+- name: Disable Postfix port listening.
+  lineinfile:
+    dest: /etc/postfix/main.cf
+    regexp: ^inet_interfaces
+    line: "inet_interfaces = loopback-only"
+    state: present
+    backrefs: yes
+  notify: restart postfix
+
+- name: Configure Postfix hostname.
+  lineinfile:
+    dest: /etc/postfix/main.cf
+    regexp: ^myhostname
+    line: "myhostname = {{ inventory_hostname }}"
+    state: present
+    backrefs: yes
+  notify: restart postfix
+
+- name: Prevent Postfix from listening on ports.
+  lineinfile:
+    dest: /etc/postfix/master.cf
+    regexp: ^smtp      inet
+    line: "#smtp      inet"
+    state: present
+    backrefs: yes
+  notify: restart postfix
+
+- name: Immediately flush handlers before continuing (if needed)
+  meta: flush_handlers

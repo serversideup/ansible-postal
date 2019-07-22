@@ -1,0 +1,13 @@
+- name: Initialize the postal database.
+  command: postal initialize
+
+- name: Apply "/etc/rc.local" template to start postal at boot.
+  template:
+    src: etc/rc.local
+    dest: /etc/rc.local
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Start postal.
+  command: postal start

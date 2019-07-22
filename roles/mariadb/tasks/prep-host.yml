@@ -1,0 +1,20 @@
+---
+- name: Add MariaDB key.
+  apt_key:
+    keyserver: keyserver.ubuntu.com
+    id: "0xF1656F24C74CD1D8"
+    state: present
+
+- name: Add MariaDB repo.
+  apt_repository:
+    repo: 'deb [arch=amd64,arm64,ppc64el] http://nyc2.mirrors.digitalocean.com/mariadb/repo/10.4/ubuntu bionic main'
+    state: present
+  register: mysql_new_install
+
+- name: Ensure the MySQL Client is installed on the host.
+  apt:
+    state: latest
+    name:
+      - mariadb-client-10.4
+      - python-mysqldb
+    update_cache: yes

@@ -1,0 +1,23 @@
+---
+- name: Check if Postal is installed.
+  stat: 
+    path: /usr/bin/postal
+  register: postal_installed
+
+- include_tasks: install-deps.yml
+  when: postal_installed.stat.exists == false
+
+- include_tasks: config-db-queue.yml
+  when: postal_installed.stat.exists == false
+
+- include_tasks: install-postal.yml
+  when: postal_installed.stat.exists == false
+
+- include_tasks: config-postal.yml
+
+- include_tasks: initialize-postal.yml
+  when: postal_installed.stat.exists == false
+
+- include_tasks: config-nginx.yml
+
+- include_tasks: config-certbot.yml

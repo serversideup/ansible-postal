@@ -1,0 +1,50 @@
+- name: Install acme.sh.
+  shell: ./acme.sh --install
+  become_user: postal
+  args:
+    chdir: /opt/postal/acme.sh/
+
+- name: Set NGINX certs to self signed because let's encrypt doesn't exist yet.
+  replace:
+    dest: "/etc/nginx/sites-enabled/nginx-postal.conf"
+    regexp: "{{ item.regexp }}"
+    replace: "{{ item.replace }}"
+  with_items:
+      - regexp: '^(.*)ssl_certificate[^_key](.*)$'
+        replace: "    ssl_certificate      /etc/nginx/ssl/self-nginx.crt;"
+      - regexp: '^(.*)ssl_certificate_key(.*)$'
+        replace: "    ssl_certificate_key      /etc/nginx/ssl/self-nginx.key;"
+
+- name: Immediately restart NGINX before test.
+  service:
+    name: nginx
+    state: restarted
+
+- name: Obtain Let's Encrypt Certificate.
+  shell: ./acme.sh --issue --log -d "{{postal_web_host}}" -w /opt/postal/certbot-webroot
+  args:
+    chdir: /opt/postal/acme.sh/
+  become_user: postal
+
+- name: Create Let's Encrypt Certificate.
+  shell: >
+    ./acme.sh --installcert -d "{{ postal_web_host }}"
+    --certpath "/opt/postal/certificates/{{ postal_web_host }}/cert.pem"
+    --keypath "/opt/postal/certificates/{{ postal_web_host }}/privkey.pem" 
+    --fullchainpath "/opt/postal/certificates/{{ postal_web_host }}/fullchain.pem" 
+    --reloadcmd "sudo systemctl reload nginx.service"
+  args:
+    chdir: /opt/postal/acme.sh/
+  become_user: postal
+
+- name: Set the SSL settings back to Let's Encrypt
+  replace:
+    dest: "/etc/nginx/sites-enabled/nginx-postal.conf"
+    regexp: "{{ item.regexp }}"
+    replace: "{{ item.replace }}"
+  with_items:
+      - regexp: '^(.*)ssl_certificate[^_key](.*)$'
+        replace: "    ssl_certificate      /opt/postal/certificates/{{ postal_web_host }}/fullchain.pem;"
+      - regexp: '^(.*)ssl_certificate_key(.*)$'
+        replace: "    ssl_certificate_key  /opt/postal/certificates/{{ postal_web_host }}/privkey.pem;"
+  notify: restart nginx

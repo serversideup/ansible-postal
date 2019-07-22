@@ -1,0 +1,47 @@
+---
+- name: Ensure NGINX repo is enabled
+  apt_repository:
+    repo: ppa:nginx/stable
+    update_cache: yes
+
+- name: Install NGINX
+  apt:
+    name: nginx
+    state: latest
+  notify: restart nginx
+
+- name: Allow web connections
+  ufw:
+    rule: allow
+    port: "{{ item }}"
+    proto: tcp
+  with_items:
+    - "80"
+    - "443"
+
+- name: Ensure that the default NGINX site is disabled
+  file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+  notify: reload nginx
+
+- name: Ensure NGINX server tokens are off
+  lineinfile:
+    dest: /etc/nginx/nginx.conf
+    regexp: '^(.*)server_tokens(.*)$'
+    line: '        server_tokens off;'
+  notify: reload nginx
+
+- name: Ensure the default NGINX html folder is removed from the server
+  file:
+    path: /var/www/html/
+    state: absent
+
+- name: Ensure NGINX SSL directory exists
+  file:
+    path: /etc/nginx/ssl/
+    state: directory
+
+- name: Create default self signed certificate for NGINX if it doesn't exist
+  command: openssl req -new -nodes -x509 -sha256 -subj "/C=US/ST=MyState/L=Anytown/O=IT/CN=myserver.localhost" -days 3650 -newkey rsa:4096 -keyout /etc/nginx/ssl/self-nginx.key -out /etc/nginx/ssl/self-nginx.crt creates=/etc/nginx/ssl/self-nginx.crt
+  notify: restart nginx

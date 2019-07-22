@@ -1,0 +1,31 @@
+- name: Ensure Postal MySQL database is created.
+  mysql_db:
+    login_host: 127.0.0.1
+    name: "{{postal_main_db_name}}"
+    encoding: utf8mb4
+    collation: utf8mb4_unicode_ci
+    state: present
+
+- name: Ensure Postal MySQL user is configured.
+  mysql_user:
+    login_host: 127.0.0.1
+    name: "{{ postal_main_db_username }}"
+    host: "127.0.0.1"
+    password: "{{ postal_main_db_password }}"
+    priv: "{{ postal_main_db_name }}%.*:ALL"
+    state: "present"
+
+- name: Add the Postal vhost.
+  rabbitmq_vhost:
+    name: "/{{postal_rabbitmq_vhost}}"
+    state: present
+
+- name: Configure RabbitMQ Postal user.
+  rabbitmq_user:
+    user: "{{postal_rabbitmq_user}}"
+    password: "{{postal_rabbitmq_password}}"
+    vhost: "/{{postal_rabbitmq_vhost}}"
+    configure_priv: .*
+    read_priv: .*
+    write_priv: .*
+    state: present

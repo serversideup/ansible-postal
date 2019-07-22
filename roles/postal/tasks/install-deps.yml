@@ -1,0 +1,32 @@
+- name: Add Ruby repo.
+  apt_repository:
+    repo: ppa:brightbox/ruby-ng
+
+- name: Install Ruby & dependencies.
+  apt:
+    state: latest
+    name:
+      - build-essential
+      - libmysqlclient-dev
+      - nodejs
+      - python-pip
+      - python-setuptools
+      - ruby2.3
+      - ruby2.3-dev
+    update_cache: yes
+
+- name: Install "yq" for parsing YAML in Bash.
+  pip:
+    name: yq
+
+- name: Install system wide gem dependencies.
+  command: 'bash -lc "gem install {{item}}"'
+  with_items:
+    - bundler
+    - procodile
+
+- name: Allow Ruby to bind to ports.
+  capabilities:
+    path: /usr/bin/ruby2.3
+    capability: cap_net_bind_service=+ep
+    state: present

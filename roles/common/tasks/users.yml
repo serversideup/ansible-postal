@@ -1,0 +1,73 @@
+---
+
+- name: Add System Admins | Configure users (for actual people users)
+  user:
+    name: '{{item.username}}'
+    groups: '{{ item.groups | join(",") | default(omit) }}'
+    shell: '{{item.shell | default(omit)}}'
+    password: '{{item.password | default(omit)}}'
+    comment: '{{item.name | default(omit)}}'
+    uid: '{{item.uid | default(omit)}}'
+    home: '{{item.homedir | default(omit)}}'
+    state: '{{item.state | default("present")}}'
+  with_items: "{{ internal_sys_admins }}"
+  register: created_users
+
+- name: Add System Admins | Add or remove authorized keys
+  authorized_key:
+    user: '{{item.0.username}}'
+    key: '{{item.1.public_key}}'
+    state: '{{item.1.state | default ("present")}}'
+  with_subelements:
+    - "{{ internal_sys_admins }}"
+    - authorized_keys
+    - skip_missing: true
+  when: item.0.state | default("present") != 'absent'
+
+- name: Allow passwordless sudo for sudo group
+  lineinfile:
+    dest: /etc/sudoers
+    state: present
+    regexp: '^%sudo'
+    line: '%sudo ALL=(ALL) NOPASSWD: ALL'
+
+- name: Disallow root SSH access
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^PermitRootLogin"
+    line: "PermitRootLogin no"
+    state: present
+  notify: restart ssh
+
+- name: Configure custom SSH port
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^Port"
+    line: "Port {{ssh_port}}"
+    state: present
+  notify: restart ssh
+
+- name: Disallow password authentication
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^PasswordAuthentication"
+    line: "PasswordAuthentication no"
+    state: present
+  notify: restart ssh
+
+- name: Allow SSH connections
+  ufw:
+    rule: allow
+    port: "{{ ssh_port }}"
+    proto: tcp
+    
+- name: Enable UFW firewall
+  ufw:
+    state: enabled
+    logging: low
+
+- name: Install fail2ban
+  apt:
+    pkg: fail2ban
+    state: latest
+  notify: restart fail2ban

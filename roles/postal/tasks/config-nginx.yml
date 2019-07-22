@@ -1,0 +1,12 @@
+- name: Apply Postal NGINX template.
+  template:
+    src: etc/nginx/sites-available/nginx-postal.conf.j2
+    dest: /etc/nginx/sites-available/nginx-postal.conf
+  notify: reload nginx
+
+- name: Enable the Postal NGINX configuration.
+  file:
+    src: "/etc/nginx/sites-available/nginx-postal.conf"
+    dest: "/etc/nginx/sites-enabled/nginx-postal.conf"
+    state: link
+  notify: reload nginx

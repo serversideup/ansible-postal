@@ -1,0 +1,47 @@
+- name: Configure Postal user.
+  user:
+    name: postal
+    shell: /bin/bash
+    comment: "Postal user"
+    home: /opt/postal
+    state: present
+    system: yes
+
+- name: Create the Postal directory
+  file:
+    path: /opt/postal/app/
+    owner: postal
+    state: directory
+
+- name: Download latest release of Postal.
+  unarchive:
+    src: https://postal.atech.media/packages/stable/latest.tgz
+    dest: /opt/postal/app/
+    remote_src: yes
+    owner: postal
+
+- name: Create symbolic link to Postal binary.
+  file:
+    src: /opt/postal/app/bin/postal
+    dest: /usr/bin/postal
+    state: link
+
+- name: Install required dependencies via bundler.
+  command: postal bundle /opt/postal/vendor/bundle
+
+- name: Initialize the postal config.
+  command: postal initialize-config
+
+- name: Save the secret key to the Postal home directory.
+  shell: >
+    cat /opt/postal/config/postal.yml |
+    yq .rails.secret_key |
+    sed -e 's/^"//' -e 's/"$//' >
+    "{{ postal_secret_key_file }}"
+
+- name: Make sure the secret key is secure.
+  file:
+    path: "{{ postal_secret_key_file }}"
+    owner: postal
+    group: root
+    mode: 0600
