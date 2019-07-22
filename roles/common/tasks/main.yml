@@ -30,6 +30,7 @@
       - curl
       - git
       - htop
+      - jq
       - logrotate
       - mailutils
       - python-minimal
