@@ -1,0 +1,57 @@
+---
+############################################################################################
+# Required changes -- be sure to change all of these to your preference
+############################################################################################
+
+# Set your timezone (follows the same format as PHP https://www.php.net/manual/en/timezones.php)
+server_timezone: "UTC"
+
+# It is recommended to change this to a number between 10000 and 65535.
+# If you do change it, you will need to make sure to update all of your
+# commands to use your new SSH port though...
+ssh_port: "22"
+
+# Set this to your email address
+server_contact: youremail@noreply.test
+
+# Configure your system administrator user accounts
+internal_sys_admins:
+  - username: myawesomeadmin
+    name: Your Name Here
+    state: present
+    groups: ['adm','sudo']
+    shell: "/bin/bash"
+    authorized_keys:
+      # Replace the entire quotes with the PUBLIC ssh key
+      - public_key: "ssh rsa abcd1234 your-ssh-key-here"
+
+  - username: myotheradmin
+    name: Their Name Here
+    state: present
+    groups: ['adm','sudo']
+    shell: "/bin/bash"
+    authorized_keys:
+      # Replace the entire quotes with the PUBLIC ssh key
+      - public_key: "ssh rsa xyz56789 their-ssh-key-here"
+
+############################################################################################
+# Optional changes -- change this only if you are feeling extra nerdy
+############################################################################################
+
+# NTP configuration settings
+timedatectl_timeservers:
+  - "0.ubuntu.pool.ntp.org"
+  - "1.ubuntu.pool.ntp.org"
+  - "2.ubuntu.pool.ntp.org"
+  - "3.ubuntu.pool.ntp.org"
+
+timedatectl_timeservers_fallback:
+  - "time-a-g.nist.gov"
+  - "time-b-g.nist.gov"
+  - "time-c-g.nist.gov"
+  - "time-d-g.nist.gov"
+
+ntp_driftfile: "/var/lib/ntp/ntp.drift"
+
+# APT configuration settings
+apt_cache_expiration: 86400
