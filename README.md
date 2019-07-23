@@ -20,7 +20,7 @@ This entire setup supports the following features:
 ### What is Ansible?
 Ansible is a tool that you install on your computer that will connect to your server over SSH and configure it for you. If you are not familiar with Ansible, we highly suggest that you read [Ansible's Getting Started Guide](https://docs.ansible.com/ansible/latest/user_guide/intro_getting_started.html). This will help you understand the most important concepts and how to install it on your local machine.
 
-# 🚨 Special Notes
+# ⚠️ Special Notes ⚠️
 This code has been running in production and has been running well for us. Few important notes for you to understand:
 
 * It has been tested on **Ubuntu 18.04 only**
@@ -107,7 +107,7 @@ nano /etc/netplan/10-ens3.yaml
 
 * Press `CMD + V` to paste
 * Press `CTRL + O` (that is an "oh", not a zero) to Save
-* Press `CTRL + X` to save the file
+* Press `CTRL + X` to exit the `nano` text editor
 
 ## Prepare server for Ansible
 Now that we have the configuration ready we just need to:
