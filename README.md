@@ -66,7 +66,7 @@ Be sure to select/configure:
 Our example is `mypostalserver.521dimensions.com`, so we added an "A record" that points to our IP address that Vultr gave us.
 
 ## Add your secondary IP address (if you plan to use Click & Open Tracking)
-Going back to the Vultr portal, go to "Settings &rarr; IPv4" then click "Add Another IPv4 Address".
+Going back to the Vultr portal, go to "Settings &rarr; IPv4" then click "Add Another IPv4 Address". **You may also need to restart your server through the *Vultr control panel* in order for your IP to apply to your account!!! (that means NOT just running the command `reboot`)**
 
 <img src="./.github/assets/02-AddAddress.png" alt="Add IPv4 Address">
 
