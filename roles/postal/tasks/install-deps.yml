@@ -11,8 +11,8 @@
       - nodejs
       - python-pip
       - python-setuptools
-      - ruby2.3
-      - ruby2.3-dev
+      - "ruby{{ ruby_version }}"
+      - "ruby{{ ruby_version }}-dev"
     update_cache: yes
 
 - name: Install "yq" for parsing YAML in Bash.
@@ -27,6 +27,6 @@
 
 - name: Allow Ruby to bind to ports.
   capabilities:
-    path: /usr/bin/ruby2.3
+    path: "/usr/bin/ruby{{ ruby_version }}"
     capability: cap_net_bind_service=+ep
     state: present
