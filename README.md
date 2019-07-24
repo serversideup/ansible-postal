@@ -37,15 +37,42 @@ You can self-host this, or go with a cloud provider. Cloud providers will probab
 * **TWO** Static public facing IP addresses (if you plan to use [Click & Open Tracking](https://github.com/atech/postal/wiki/Click-&-Open-Tracking))
 * We've only tested this Ansible deployment with **Ubuntu 18.04**
 
-### Recommended providers
-* [Vultr](https://www.vultr.com/?ref=7093917) (recommended if you want "Click & Open Tracking")
-* [Digital Ocean](https://m.do.co/c/f3bad4b927ca)
-* [Linode](https://www.linode.com/?r=5a1b585e4eb919d3d89ad242bd1bb2924754c444)
+## Recommended providers
+DISCLAIMER: The links below are affiliate links. This kicks back a few bucks to us for the referral, but does not cost you *anything* extra to you. Affiliate programs do not influence our recommendations in any sort of way either. These are the best recommendations available.
 
-DISCLAIMER: The above links are affiliate links. This kicks back a few bucks to us for the referral, but does not cost you *anything* extra to you. Affiliate programs do not influence our recommendations in any sort of way either. These are the best recommendations available.
+### [Vultr](https://www.vultr.com/?ref=7093917)
+**Pros**
+* Simple setup with two IP addresses
+* Reliable and affordable
 
-#### 🚨 Important note regarding Digital Ocean's "Floating IP Addresses"
-Since we use Click & Open tracking, we found [Vultr](https://www.vultr.com/?ref=7093917) to have the easiest support for a second Internet IP address. Digital Ocean uses "Floating IP Addresses" for their secondary IP addresses. This uses some form of NAT (they use Openstack) for floating IPs and can break certain things on some software. We experienced these issues with Digital Ocean's "floating IP address" in the past, so that's why we went with Vultr. The rest of this guide will show you how to deploy through [Vultr](https://www.vultr.com/?ref=7093917).
+**Cons**
+* [Vultr blocks port 25 by default](https://www.vultr.com/docs/
+what-ports-are-blocked). You need to contact support to have it unblocked
+
+(We already had our stuff unblocked, so the rest of the guide will follow Vultr)
+
+### [Digital Ocean](https://m.do.co/c/f3bad4b927ca)
+**Pros**
+* Reliable and affordable
+* Supports second IP address with "floating IP"
+
+**Cons**
+* Digital Ocean uses "Floating IP Addresses" for their secondary IP addresses. This uses some form of NAT (they use Openstack) for floating IPs and can break certain things on some software. No reports with Postal yet, but it has done this for other softwware.
+
+### [Linode](https://www.linode.com/?r=5a1b585e4eb919d3d89ad242bd1bb2924754c444)
+**Pros**
+* Reliable and affordable
+* Supports second IP address
+
+**Cons**
+* Configuring the second IP might require more techincal skill
+
+### AWS. Azure, Google Cloud (We personally never tried it, but pretty sure it will work)
+**Pros**
+* You can do almost anything with these providers
+
+**Cons**
+* It is more expensive
 
 ## Configure your SSH keys
 For best security, make sure your SSH keys are configured and [added to your Vultr account](https://www.vultr.com/docs/how-do-i-generate-ssh-keys).
