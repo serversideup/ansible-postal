@@ -75,6 +75,11 @@ what-ports-are-blocked). You need to contact support to have it unblocked
 **Cons**
 * It is more expensive
 
+### No matter who you choose...
+Self hosting email is a major pain in the butt. Some spam filters will block entire blocks of known IP addresses for VPS providers. If you continue on this adventure, sign up for these tools minimally to monitor your sender reputation:
+* https://sendersupport.olc.protection.outlook.com/SNDS/index.aspx
+* https://www.gmail.com/postmaster/
+
 ## Configure your SSH keys
 For best security, make sure your SSH keys are configured and [added to your Vultr account](https://www.vultr.com/docs/how-do-i-generate-ssh-keys).
 
