@@ -58,6 +58,7 @@ what-ports-are-blocked). You need to contact support to have it unblocked
 
 **Cons**
 * Digital Ocean uses "Floating IP Addresses" for their secondary IP addresses. This uses some form of NAT (they use Openstack) for floating IPs and can break certain things on some software. No reports with Postal yet, but it has done this for other softwware.
+* You cannot set PTR records on Floating IPs. So if you plan to send mail through more than one IP, look for a different provider
 
 ### [Linode](https://www.linode.com/?r=5a1b585e4eb919d3d89ad242bd1bb2924754c444)
 **Pros**
