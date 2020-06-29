@@ -6,8 +6,8 @@
       - mariadb-server-10.4
     update_cache: yes
 
-- name: Ensure the custom MariaDB config is in place.
+- name: Ensure the custom MySQL config is in place.
   template:
-    src: etc/mysql/mariadb.conf.d/postal.cnf.j2
-    dest: /etc/mysql/mariadb.conf.d/postal.cnf
+    src: etc/mysql/conf.d/postal.cnf.j2
+    dest: /etc/mysql/conf.d/postal.cnf
   notify: restart mysql
